@@ -33,3 +33,30 @@ Reported packages for freshers across SP levels and DSE run roughly **₹10–21
 ## Key prep principle
 
 Across every source used to build this repo, one point repeats: **the online coding assessment is the hardest filter**. If you clear it, the interview stage is very manageable for anyone with solid fundamentals. This means coding-round prep (Section 03) should get the majority of your prep time, not the interview-question banks.
+
+## Hiring Pathways: Campus vs. HackWithInfy
+
+Infosys recruits for SP and DSE roles through two primary routes:
+
+1. **On-Campus / Infytq / Dedicated Off-Campus Hiring Drives**:
+   - Organized directly with colleges or via nationwide off-campus drives.
+   - Usually involves an initial screening/coding round followed directly by technical & HR interviews.
+
+2. **HackWithInfy (National Competitive Coding Competition)**:
+   - Open to all eligible engineering students across India.
+   - **Round 1 (Qualifier)**: 3 coding problems in 3 hours (Easy, Medium, Hard). Top performers get direct interview calls for SP/DSE roles or qualify for Round 2.
+   - **Round 2 (Grand Finale)**: Hackathon / advanced coding round for top national rankers, offering direct SP roles and cash prizes.
+
+## Role Selection Self-Assessment Rubric
+
+Use this checklist to decide which target role to optimize your preparation strategy for:
+
+- **Target SP if**:
+  - [ ] You regularly solve LeetCode Medium/Hard or participate in Codeforces / CodeChef contests.
+  - [ ] You are comfortable formulating Dynamic Programming state transitions and Graph algorithms under time pressure.
+  - [ ] You enjoy algorithmic optimization and analyzing Big-O time/space tradeoffs.
+
+- **Target DSE if**:
+  - [ ] You have built end-to-end full-stack web applications, APIs, or database-driven projects.
+  - [ ] You prefer solving practical implementation problems over abstract competitive programming challenges.
+  - [ ] You can confidently defend your project architecture, database schema, and technology choices in an interview.
