@@ -1,160 +1,183 @@
-# Previous-Year Question Patterns & Real Exam Question Bank
+# Previous-Year Question Patterns & Problem Bank
 
 > [!IMPORTANT]
-> **Important Compliance Note**: The problem patterns below are **paraphrased approach guides and pattern analyses** based on real candidate experiences and reported exam slots from recent Infosys SP/DSE drives. They are NOT copy-pasted problem statements. Infosys reuses *underlying algorithmic patterns and problem shapes*, not verbatim question text. Learn the pattern, understand the optimal technique, and practice the corresponding LeetCode/GfG problem types.
+> Problem statements below are **paraphrased** based on real candidate reports. Infosys reuses *algorithmic patterns*, not verbatim text. Learn the pattern, practice the LeetCode analog, then solve the full problem in the numbered files.
 
 ---
 
-## Easy-Tier Patterns (Q1-Style Questions)
+## 20 Solved Problems — Quick Reference
 
-### Pattern 1 — Consecutive Subarray / Streak-Counting Framing
-- **Real Exam Problem Shape**: Given a string or array representing daily status (e.g., student attendance `'P'`/`'A'`, stock upward/downward movement, or color sequence of berries), find the maximum length of a contiguous sequence satisfying a given rule (e.g., at most $K$ consecutive absences or maximum streak of non-decreasing values).
-- **Underlying Skill**: Single-pass traversal, sliding window with a counter, Kadane's variation.
-- **Approach Note**: Keep a running streak count `current_streak` and update `max_streak` whenever the condition holds. Reset or decrement counters cleanly when encountering invalid elements.
-- **Complexity Goal**: $O(N)$ time, $O(1)$ space.
-- **Practice Problems**: LeetCode 485 (Max Consecutive Ones), LeetCode 1446 (Consecutive Characters).
-
-### Pattern 2 — Frequency-Based Character / Element Filtering
-- **Real Exam Problem Shape**: Given an array of integers or a string of characters, transform it by deleting elements that appear with a frequency greater than $K$, or find the first element whose frequency meets a specific parity condition.
-- **Underlying Skill**: Hash map / Frequency array lookup, two-pass iteration.
-- **Approach Note**: Pass 1: Build a frequency map using a hash map or fixed-size array (`int freq[26]` / `int freq[256]`). Pass 2: Filter or construct the result array based on the map.
-- **Complexity Goal**: $O(N)$ time, $O(U)$ space where $U$ is number of unique keys.
-- **Practice Problems**: LeetCode 387 (First Unique Character in a String), LeetCode 1370 (Increasing Decreasing String).
-
-### Pattern 3 — Matrix Traversal & Layer Manipulation
-- **Real Exam Problem Shape**: Given an $N \times M$ matrix, traverse it in spiral order or diagonal order, or rotate specific concentric layers by $K$ positions.
-- **Underlying Skill**: Boundary manipulation (`top`, `bottom`, `left`, `right` pointers), simulation.
-- **Approach Note**: Maintain 4 boundary variables and shrink them after each directional pass (left-to-right, top-to-bottom, right-to-left, bottom-to-top).
-- **Complexity Goal**: $O(N \times M)$ time, $O(1)$ extra space.
-- **Practice Problems**: LeetCode 54 (Spiral Matrix), LeetCode 48 (Rotate Image).
-
-### Pattern 4 — Two-Pointer In-Place Filtering & Partitioning
-- **Real Exam Problem Shape**: Rearrange an array so that all negative numbers or even numbers appear before positive/odd numbers, preserving their original relative order if possible.
-- **Underlying Skill**: Two pointers (Read/Write pointer), Stable Partitioning.
-- **Approach Note**: If relative order doesn't matter, use left/right converging pointers. If relative order matters (stable), use a write pointer or temporary auxiliary array.
-- **Complexity Goal**: $O(N)$ time, $O(1)$ or $O(N)$ space.
-- **Practice Problems**: LeetCode 283 (Move Zeroes), LeetCode 905 (Sort Array By Parity).
+| # | File | Tier | Topic | Key Technique | Online Trap? |
+|---|---|---|---|---|---|
+| 1 | [01-maximum-subarray-sum.md](01-maximum-subarray-sum.md) | Easy | Arrays | Kadane's Algorithm | — |
+| 2 | [02-next-greater-element.md](02-next-greater-element.md) | Easy | Stack | Monotonic Stack | — |
+| 3 | [03-rotate-array-by-k.md](03-rotate-array-by-k.md) | Easy | Arrays | Reversal Algorithm | — |
+| 4 | [04-summer-array-min-swaps.md](04-summer-array-min-swaps.md) | Easy | Greedy | Inversion Count — **NOT bubble sort** | ⚠️ Yes |
+| 5 | [05-min-base-identical-digits.md](05-min-base-identical-digits.md) | Easy | Number Theory | Base Conversion Search | — |
+| 6 | [06-monster-quest.md](06-monster-quest.md) | Medium | Greedy | Sort + Exchange Argument | — |
+| 7 | [07-andys-vacation.md](07-andys-vacation.md) | Medium | Greedy | Streak Counting | — |
+| 8 | [08-min-ugliness-binary-string.md](08-min-ugliness-binary-string.md) | Medium | Greedy | Sliding Window / Prefix Count | — |
+| 9 | [09-trapping-rain-water.md](09-trapping-rain-water.md) | Medium | Two Pointers | Prefix-Max / Two Pointers | — |
+| 10 | [10-number-of-islands.md](10-number-of-islands.md) | Medium | Graphs | BFS / DFS on Grid | — |
+| 11 | [11-coin-change.md](11-coin-change.md) | Medium | DP | Unbounded Knapsack DP | — |
+| 12 | [12-max-xor-sum-in-range.md](12-max-xor-sum-in-range.md) | Medium | Bit Manipulation | XOR prefix + Greedy | — |
+| 13 | [13-longest-common-subsequence.md](13-longest-common-subsequence.md) | Hard | DP | 2D DP (LCS) | — |
+| 14 | [14-counting-divisible-arrays.md](14-counting-divisible-arrays.md) | Hard | Number Theory | Harmonic divisor loops | — |
+| 15 | [15-packing-gifts-into-k-boxes.md](15-packing-gifts-into-k-boxes.md) | Hard | Greedy | Optimal partitioning — **answer is 5, not 4** | ⚠️ Yes |
+| 16 | [16-longest-increasing-path-matrix.md](16-longest-increasing-path-matrix.md) | Hard | DFS + Memo | Topological DFS on Grid | — |
+| 17 | [17-max-xor-half-sized-subset.md](17-max-xor-half-sized-subset.md) | Hard | Bit Manipulation | Gaussian Elimination over GF(2) | — |
+| 18 | [18-longest-bitwise-compatible-lis.md](18-longest-bitwise-compatible-lis.md) | Hard | Bit Manip + LIS | **MSB-index LIS** — not plain value LIS | ⚠️ Yes |
+| 19 | [19-largest-set-product-1-mod-n.md](19-largest-set-product-1-mod-n.md) | Hard | Number Theory | **Euler's Totient φ(N)** — not `(N-1)!` | ⚠️ Yes |
+| 20 | [20-balls-and-buckets-probability.md](20-balls-and-buckets-probability.md) | Hard | Probability | Combinatorics / Expected Value | — |
 
 ---
 
-## Medium-Tier Patterns (Q2-Style Questions)
+## Documented Online Errors & Corrections
 
-### Pattern 5 — "Rearrange Array / String with Minimum Adjacent Swaps"
-- **Real Exam Problem Shape**: Given a binary array or string of characters, rearrange it so all target elements (e.g., all `1`s or all vowels) end up adjacent to each other using the *minimum number of adjacent swaps*.
-- **Underlying Skill**: Greedy counting, Two pointers / Median index placement.
-- **Approach Note**: Do NOT simulate actual swaps! Collect the indices of all target elements into a list `pos`. The optimal meeting point for all target elements is the median element in `pos`. The total minimum swaps is the sum of distances from each target element to its final compact position around the median.
-- **Complexity Goal**: $O(N)$ time, $O(K)$ space where $K$ is number of target elements.
-- **Practice Problems**: LeetCode 1703 (Minimum Adjacent Swaps for K Consecutive Items), LeetCode 1151 (Minimum Swaps to Group All 1's Together).
+> [!CAUTION]
+> These 4 problems have **incorrect solutions** widely circulated online. Using the wrong approach will fail hidden test cases.
 
-### Pattern 6 — Interval Merging & Scheduling Optimization
-- **Real Exam Problem Shape**: Given a set of time intervals `[start, end]` representing events, servers, or job processing windows, find the maximum number of non-overlapping jobs that can be scheduled, or the minimum number of servers needed to process all jobs.
-- **Underlying Skill**: Greedy algorithms, Sorting by end time vs. start time, Priority Queues.
-- **Approach Note**: To maximize non-overlapping jobs: Sort intervals by `end_time` ascending. Iterate and pick the next job whose `start_time` $\ge$ last selected job's `end_time`. To find minimum servers (Meeting Rooms II): Sort start times and end times separately or use a Min-Heap of end times.
-- **Complexity Goal**: $O(N \log N)$ time, $O(N)$ space.
-- **Practice Problems**: LeetCode 435 (Non-overlapping Intervals), LeetCode 253 (Meeting Rooms II), LeetCode 56 (Merge Intervals).
+### Problem 4 — Summer Array: Min Swaps
+- **Wrong online answer**: Simulates actual bubble sort swaps — $O(N^2)$. Times out for $N = 10^5$.
+- **Correct approach**: Count inversions using Merge Sort or a Fenwick Tree in $O(N \log N)$. Number of adjacent swaps = number of inversions.
 
-### Pattern 7 — Sliding Window with Fixed / Dynamic Constraint
-- **Real Exam Problem Shape**: Given an array of numbers or characters, find the longest contiguous subarray/substring containing at most $K$ distinct elements, or whose sum is $\le S$.
-- **Underlying Skill**: Sliding Window (Expand right pointer, contract left pointer when constraint is violated).
-- **Approach Note**: Use a Hash Map to store frequency of elements inside window `[left...right]`. Expand `right`. If `map.size() > K`, shrink `left` until `map.size() <= K`. Record `max_length = max(max_length, right - left + 1)`.
-- **Complexity Goal**: $O(N)$ time, $O(K)$ space.
-- **Practice Problems**: LeetCode 904 (Fruit Into Baskets / Longest Subarray with at most 2 distinct), LeetCode 3 (Longest Substring Without Repeating Characters).
+### Problem 15 — Packing Gifts into K Boxes
+- **Wrong online answer**: Claims maximum boxes = 4 for the sample input.
+- **Correct answer**: Maximum = **5** (verified by brute-force enumeration). Online solutions use a flawed greedy that misses valid partitions.
 
-### Pattern 8 — Heap / Priority Queue Top-K Optimization
-- **Real Exam Problem Shape**: You are given $N$ streams or tasks with scores/frequencies and need to continuously extract the $K$-th largest score or minimize the maximum sum when pairing elements.
-- **Underlying Skill**: Min-Heap / Max-Heap (`std::priority_queue` in C++, `heapq` in Python, `PriorityQueue` in Java).
-- **Approach Note**: To keep track of Top-$K$ elements in an $N$-element stream, use a **Min-Heap** of max size $K$. Push element; if heap size $> K$, pop top. The top of the Min-Heap is always the $K$-th largest element!
-- **Complexity Goal**: $O(N \log K)$ time, $O(K)$ space.
-- **Practice Problems**: LeetCode 215 (Kth Largest Element in an Array), LeetCode 347 (Top K Frequent Elements).
+### Problem 18 — Longest Bitwise-Compatible LIS
+- **Wrong online answer**: Runs standard LIS on raw values, ignoring the bitwise compatibility condition entirely.
+- **Correct approach**: Decode "bitwise compatibility" as *strictly increasing MSB indices*. The LIS must be built on MSB positions, not raw values. Use $O(N \log N)$ patience sorting on MSB indices.
 
-### Pattern 9 — Tree Path Constraint / Boundary Calculation
-- **Real Exam Problem Shape**: Given a binary tree with node values, find the maximum path sum between any two nodes (not necessarily passing through the root), or count paths that sum to a target value.
-- **Underlying Skill**: Tree DFS / Recursion with bottom-up state propagation.
-- **Approach Note**: For each node `curr`, recursively calculate maximum left branch sum `L` and right branch sum `R` (ignoring negative sums). The maximum path *passing through `curr`* is `curr.val + L + R`. Update global maximum. Return `curr.val + max(L, R)` to parent.
-- **Complexity Goal**: $O(N)$ time, $O(H)$ recursion stack space.
-- **Practice Problems**: LeetCode 124 (Binary Tree Maximum Path Sum), LeetCode 437 (Path Sum III).
+### Problem 19 — Largest Set with Product 1 mod N
+- **Wrong online answer**: Computes $(N-1)!$ as the answer, which overflows 32-bit integers for $N \geq 13$ and is also mathematically incorrect.
+- **Correct approach**: The answer is **Euler's Totient $\varphi(N)$** — the count of integers in $[1, N]$ coprime to $N$. Compute in $O(\sqrt{N})$ using prime factorization.
 
 ---
 
-## Hard-Tier Patterns (Q3-Style Questions — SP / High-Score DSE)
+## Pattern Catalog (19 Core Patterns)
 
-### Pattern 10 — Dynamic Programming: Grid Path & Minimum Cost Walk
-- **Real Exam Problem Shape**: Given an $N \times M$ grid filled with cost values, start at `(0,0)` and reach `(N-1, M-1)`. You can only move Right or Down (or down-left/down-right). Some cells may be blocked or contain special multipliers. Find the minimum total cost path.
-- **Underlying Skill**: 2D Dynamic Programming (Tabulation / Top-Down Memoization).
-- **Approach Note**:
-  - State: `dp[i][j]` = Minimum cost to reach cell `(i, j)`.
-  - Recurrence: `dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])`.
-  - Base Cases: `dp[0][0] = grid[0][0]`, initialize first row and first column cumulatively.
-  - Handle obstacles: If `grid[i][j] == BLOCKED`, `dp[i][j] = INF`.
-- **Complexity Goal**: $O(N \times M)$ time, $O(M)$ space with 1D row buffer.
-- **Practice Problems**: LeetCode 64 (Minimum Path Sum), LeetCode 63 (Unique Paths II).
+*This extends the solved problems with broader pattern recognition for unseen questions.*
 
-### Pattern 11 — Dynamic Programming: Subsequence / Knapsack Optimization
-- **Real Exam Problem Shape**: You are given $N$ items with values and weights (or an array of integers). Find the maximum score by choosing a subset such that total weight $\le W$, or determine if the array can be partitioned into two subsets with equal sum.
-- **Underlying Skill**: 0/1 Knapsack DP, Subset Sum DP.
-- **Approach Note**:
-  - State: `dp[w]` = Maximum value attainable with weight budget `w`.
-  - Outer loop over items `1..N`, inner loop over weight `W` down to `weight[i]`.
-  - Recurrence: `dp[w] = max(dp[w], dp[w - weight[i]] + value[i])`.
-- **Complexity Goal**: $O(N \times W)$ time, $O(W)$ space.
-- **Practice Problems**: LeetCode 416 (Partition Equal Subset Sum), LeetCode 474 (Ones and Zeroes).
+### Easy Patterns
 
-### Pattern 12 — Graph: Shortest Path with Modified Constraints (Dijkstra Variant)
-- **Real Exam Problem Shape**: Given a weighted graph of $N$ cities connected by roads with toll costs and travel times, find the minimum toll cost path from source $S$ to destination $D$ such that total travel time does NOT exceed $T$ max hours.
-- **Underlying Skill**: Modified Dijkstra algorithm using Priority Queue storing `(current_cost, current_node, current_time)`.
-- **Approach Note**: Use a 2D distance state `dist[node][time]` representing minimum cost to reach `node` with elapsed time `time`. Push `(0, source, 0)` into Min-Heap. When popping `(cost, u, t)`, iterate neighbors `v` with edge `(u, v, toll, time_needed)`. If `t + time_needed <= T` and new cost is better than `dist[v][t + time_needed]`, update and push.
-- **Complexity Goal**: $O(E \cdot T \log(V \cdot T))$ time, $O(V \cdot T)$ space.
-- **Practice Problems**: LeetCode 787 (Cheapest Flights Within K Stops), LeetCode 1928 (Minimum Cost to Reach Destination in Time).
+**Pattern E1 — Consecutive Subarray / Streak Counting**
+- Shape: Max length contiguous sequence satisfying a condition (at most $K$ absences, non-decreasing streak).
+- Technique: Single-pass counter, Kadane's variation.
+- Complexity: $O(N)$ time, $O(1)$ space.
+- LeetCode: 485 (Max Consecutive Ones), 1446 (Consecutive Characters).
 
-### Pattern 13 — Dynamic Programming: Longest Increasing Subsequence (LIS) & Variants
-- **Real Exam Problem Shape**: Given an array of integers, find the length of the longest subsequence such that elements are strictly increasing, or find the maximum weighted sum of an increasing subsequence.
-- **Underlying Skill**: LIS via $O(N \log N)$ Binary Search / Patient Sorting (`std::lower_bound`).
-- **Approach Note**: Maintain an array `tails` where `tails[i]` stores the smallest tail of all increasing subsequences of length `i+1`. For each element `x` in input: If `x` is larger than all elements in `tails`, append `x`. Otherwise, replace the first element in `tails` that is $\ge x$ using binary search.
-- **Complexity Goal**: $O(N \log N)$ time, $O(N)$ space.
-- **Practice Problems**: LeetCode 300 (Longest Increasing Subsequence), LeetCode 354 (Russian Doll Envelopes).
+**Pattern E2 — Frequency-Based Filtering**
+- Shape: Delete elements with frequency $> K$, or find first element matching a frequency parity condition.
+- Technique: Hash map frequency count (2-pass).
+- Complexity: $O(N)$ time, $O(U)$ space.
+- LeetCode: 387 (First Unique Character), 1370 (Increasing Decreasing String).
 
-### Pattern 14 — Graph: Connected Components & Redundant Connections (DSU)
-- **Real Exam Problem Shape**: Given $N$ computers connected by network cables, find the minimum number of cable extractions and re-connections needed to connect all computers into a single unified network.
-- **Underlying Skill**: Disjoint Set Union (DSU) with Path Compression & Rank.
-- **Approach Note**: Count total extra redundant edges (`find(u) == find(v)` during initial graph building). Count number of isolated connected components `C`. To connect `C` components, we need `C - 1` free edges. If `redundant_edges >= C - 1`, return `C - 1`; else return `-1`.
-- **Complexity Goal**: $O(E \cdot \alpha(V))$ time, $O(V)$ space.
-- **Practice Problems**: LeetCode 1319 (Number of Operations to Make Network Connected), LeetCode 684 (Redundant Connection).
+**Pattern E3 — Matrix Traversal & Layer Manipulation**
+- Shape: Spiral/diagonal traversal, rotate concentric layers by $K$ positions.
+- Technique: 4 boundary pointers (`top`, `bottom`, `left`, `right`), simulation.
+- Complexity: $O(N \times M)$ time, $O(1)$ extra space.
+- LeetCode: 54 (Spiral Matrix), 48 (Rotate Image).
 
-### Pattern 15 — Modular Arithmetic & Number Theory Framing
-- **Real Exam Problem Shape**: You are given a large number $N$ and asked to compute the number of subsets whose product modulo $M$ equals 1, or find $(A^B) \pmod{10^9+7}$.
-- **Underlying Skill**: Modular Exponentiation, Fermat's Little Theorem, DP over Modulo states.
-- **Approach Note**: Always apply modulo at every addition and multiplication step: `(a + b) % M` and `(a * b) % M`. For exponentiation $A^B \pmod M$, use Binary Exponentiation ($O(\log B)$).
-- **Complexity Goal**: $O(\log B)$ or $O(N \times M)$ DP.
-- **Practice Problems**: LeetCode 50 (Pow(x, n)), GfG Modular Exponentiation problems.
-
-### Pattern 16 — Bit Manipulation & Bitmasking for Subsets
-- **Real Exam Problem Shape**: Given an array of $N$ numbers ($N \le 20$), choose a subset to maximize the total Bitwise XOR value, or find the maximum subset sum that satisfies bitwise constraints.
-- **Underlying Skill**: Bitmask iteration (`1 << N`) or Trie-based XOR Maximization.
-- **Approach Note**: For $N \le 20$, iterate all $2^N$ masks: `for mask in range(1 << N)`. For larger $N$, insert binary representations of numbers into a Trie and query for maximum opposite bits.
-- **Complexity Goal**: $O(2^N)$ for small $N$, $O(N \log(\max A))$ for Trie approach.
-- **Practice Problems**: LeetCode 421 (Maximum XOR of Two Numbers in an Array), LeetCode 1178 (Number of Valid Words for Each Puzzle).
-
-### Pattern 17 — Trie-Based Prefix Query & Word Search
-- **Real Exam Problem Shape**: Given a dictionary of words and a stream of prefix search queries, efficiently count how many words in the dictionary start with a given prefix.
-- **Underlying Skill**: Trie (Prefix Tree) with `prefix_count` stored at each node.
-- **Approach Note**: Each node has `children[26]` and `prefix_count`. When inserting a word, increment `prefix_count` on every node along the path. For query prefix `P`, traverse down `P` and return `node.prefix_count`.
-- **Complexity Goal**: $O(L)$ per insert/query where $L$ is word length.
-- **Practice Problems**: LeetCode 208 (Implement Trie), LeetCode 1804 (Implement Trie II).
+**Pattern E4 — Two-Pointer Partitioning**
+- Shape: Rearrange array so negatives/evens appear before positives/odds.
+- Technique: Read/write pointer (stable) or converging pointers (unstable).
+- LeetCode: 283 (Move Zeroes), 905 (Sort Array By Parity).
 
 ---
 
-## DSE-Specific Application & Implementation Patterns
+### Medium Patterns
 
-### Pattern 18 — String Tokenization & Rule-Based Parsing (API/Log Filter)
-- **Real Exam Problem Shape**: Given raw log strings formatted as `"TIMESTAMP|LEVEL|SERVICE|MESSAGE"`, parse and filter logs for a target `SERVICE` and `LEVEL`, sorting results chronologically.
-- **Underlying Skill**: String splitting, struct/class mapping, custom sorting comparators.
-- **Approach Note**: Split by delimiter `|`. Map each record to a structured object. Filter using lambda functions, then sort by timestamp string/epoch.
-- **Complexity Goal**: $O(N \log N)$ time, $O(N)$ space.
-- **Practice Problems**: LeetCode 593 (Valid Square / String Parsing), LeetCode 937 (Reorder Data in Log Files).
+**Pattern M1 — Min Adjacent Swaps to Group Target Elements**
+- Shape: Group all target elements together using minimum adjacent swaps.
+- Technique: Collect target indices → find median → sum distances. **Do NOT simulate swaps.**
+- Complexity: $O(N)$ time, $O(K)$ space.
+- LeetCode: 1703 (Min Adjacent Swaps for K Consecutive Items).
 
-### Pattern 19 — Custom Cache Design (LRU / LFU Simulation)
-- **Real Exam Problem Shape**: Design a data structure for a digital application cache that supports `get(key)` and `put(key, value)` in $O(1)$ average time, evicting the Least Recently Used (LRU) item when capacity is reached.
-- **Underlying Skill**: Doubly Linked List + Hash Map (`unordered_map<int, list<pair<int,int>>::iterator>`).
-- **Approach Note**: Hash Map provides $O(1)$ key lookup. Doubly Linked List maintains usage order. On `get`/`put`, move node to head of list. On eviction, remove node from tail of list and erase from map.
-- **Complexity Goal**: $O(1)$ time for both `get` and `put`.
-- **Practice Problems**: LeetCode 146 (LRU Cache).
+**Pattern M2 — Interval Merging & Scheduling**
+- Shape: Max non-overlapping jobs, or minimum servers for all jobs (Meeting Rooms II).
+- Technique: Sort by end time (max schedule); Min-Heap of end times (min servers).
+- Complexity: $O(N \log N)$ time.
+- LeetCode: 435 (Non-overlapping Intervals), 253 (Meeting Rooms II).
+
+**Pattern M3 — Variable-Length Sliding Window**
+- Shape: Longest subarray/substring with at most $K$ distinct elements or sum $\leq S$.
+- Technique: Hash map for window frequency; expand right, shrink left on violation.
+- Complexity: $O(N)$ time.
+- LeetCode: 904 (Fruit Into Baskets), LC3 (Longest Substring Without Repeating Characters).
+
+**Pattern M4 — Heap / Priority Queue Top-K**
+- Shape: K-th largest score in stream; minimize max sum when pairing elements.
+- Technique: Min-Heap of size $K$; pop when size exceeds $K$.
+- Complexity: $O(N \log K)$.
+- LeetCode: 215 (Kth Largest Element), 347 (Top K Frequent Elements).
+
+**Pattern M5 — Tree Path Sum**
+- Shape: Max path sum between any two nodes (not necessarily root); count paths summing to target.
+- Technique: Post-order DFS; propagate max branch sum upward.
+- Complexity: $O(N)$ time, $O(H)$ space.
+- LeetCode: 124 (Binary Tree Max Path Sum), 437 (Path Sum III).
+
+---
+
+### Hard Patterns
+
+**Pattern H1 — Grid DP (Minimum Cost Path)**
+- Shape: Start at $(0,0)$, reach $(N-1, M-1)$, move right/down, find minimum cost.
+- State: `dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])`.
+- Complexity: $O(N \times M)$ time, $O(M)$ space with 1D buffer.
+- LeetCode: 64 (Min Path Sum), 63 (Unique Paths II).
+
+**Pattern H2 — 0/1 Knapsack / Subset Sum**
+- Shape: Max value selecting items with weight $\leq W$; partition array into two equal-sum subsets.
+- State: `dp[w] = max(dp[w], dp[w - weight[i]] + value[i])`.
+- Complexity: $O(N \times W)$ time, $O(W)$ space.
+- LeetCode: 416 (Partition Equal Subset Sum), 474 (Ones and Zeroes).
+
+**Pattern H3 — Modified Dijkstra (Multi-Constraint)**
+- Shape: Min cost path from $S$ to $D$ with total travel time $\leq T_{max}$.
+- State: `dist[node][time]`; push `(cost, node, time)` into min-heap.
+- Complexity: $O(E \cdot T \log(V \cdot T))$.
+- LeetCode: 787 (Cheapest Flights Within K Stops), 1928 (Min Cost to Reach Destination in Time).
+
+**Pattern H4 — LIS in $O(N \log N)$**
+- Shape: Length of longest strictly increasing subsequence; max weighted increasing subsequence.
+- Technique: Patience sorting — `bisect_left` on `tails` array.
+- Complexity: $O(N \log N)$ time.
+- LeetCode: 300 (LIS), 354 (Russian Doll Envelopes).
+
+**Pattern H5 — DSU / Connected Components**
+- Shape: Min cable re-connections to unify all computers into one network.
+- Technique: DSU with path compression + rank; count redundant edges and isolated components.
+- Complexity: $O(E \cdot \alpha(V))$.
+- LeetCode: 1319 (Network Connected), 684 (Redundant Connection).
+
+**Pattern H6 — Modular Arithmetic & Number Theory**
+- Shape: $(A^B) \bmod M$; count subsets with product $\equiv 1 \pmod M$.
+- Technique: Binary exponentiation $O(\log B)$; apply modulo at every step.
+- LeetCode: 50 (Pow(x,n)), GfG Modular Exponentiation.
+
+**Pattern H7 — Bitmask / XOR Subset**
+- Shape: Choose subset of $N \leq 20$ numbers to maximize XOR; find max XOR of two numbers.
+- Technique: Iterate all $2^N$ masks for small $N$; Trie-based XOR for large $N$.
+- LeetCode: 421 (Max XOR of Two Numbers in Array), 1178 (Valid Words for Each Puzzle).
+
+**Pattern H8 — Trie Prefix Query**
+- Shape: Count words in dictionary starting with given prefix.
+- Technique: Trie with `prefix_count` at every node; increment on insert, return on query.
+- Complexity: $O(L)$ per operation.
+- LeetCode: 208 (Implement Trie), 1804 (Implement Trie II).
+
+---
+
+### DSE-Specific Patterns
+
+**Pattern D1 — String Tokenization & Log Parsing**
+- Shape: Filter raw log strings (`TIMESTAMP|LEVEL|SERVICE|MESSAGE`) by service and level; sort chronologically.
+- Technique: Split by delimiter, map to struct, sort by timestamp.
+- LeetCode: 937 (Reorder Data in Log Files).
+
+**Pattern D2 — LRU Cache Design**
+- Shape: `get(key)` and `put(key, value)` in $O(1)$; evict Least Recently Used on capacity.
+- Technique: Doubly Linked List + Hash Map.
+- LeetCode: 146 (LRU Cache).

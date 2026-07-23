@@ -1,103 +1,144 @@
-# Coding Round — Full Topic Checklist
+# Coding Round — Topic Checklist
 
-Organized by the same Easy / Medium / Hard split the actual coding round uses, so you can practice in the order you'll be tested.
+## 4-Week Study Plan
 
-## Easy (Q1-tier)
+| Week | Daily Target | Topics | Problems |
+|---|---|---|---|
+| **Week 1** | 2–3 hrs/day | Arrays, Strings, Stacks, Queues, Hash Maps, Linked Lists | Problems 1–5 (Easy Tier) |
+| **Week 2** | 3 hrs/day | Greedy, Sliding Window, Two Pointers, Trees, Heaps, Recursion | Problems 6–12 (Medium Tier) |
+| **Week 3** | 3–4 hrs/day | Dynamic Programming, Graphs (BFS/DFS), DSU, Bit Manipulation, Number Theory | Problems 13–20 (Hard Tier) |
+| **Week 4** | 2–3 hrs/day | Mock rounds, edge-case review, interview prep, re-solve trap problems (4, 15, 18, 19) | Full `05-interview-prep` |
 
-Focus: correctness, clean logic-building, boundary condition safety, and linear time efficiency.
+---
 
-- [ ] **Arrays** — traversal, array rotation in-place, prefix sums, two-pointer basics, sliding window basics
-  - *Practice Prompt*: Given an array, find the maximum sum of any contiguous subarray of size $K$. (Sliding Window)
-  - *Practice Prompt*: Rotate an array of $N$ elements to the right by $K$ steps in $O(1)$ extra space.
-  - *Evaluator Cue*: Check for $O(N)$ time and $O(1)$ auxiliary space solutions; handle empty arrays or $K > N$.
-- [ ] **Strings** — palindrome checks, anagram checks, string reversal/manipulation, pattern matching basics
-  - *Practice Prompt*: Determine if two strings are anagrams of each other after removing non-alphanumeric characters.
-  - *Practice Prompt*: Find the first non-repeating character in a string in a single pass.
-  - *Evaluator Cue*: Watch for case-sensitivity, ASCII vs. Unicode, and boundary strings of length 0 or 1.
-- [ ] **Stacks & Queues** — balanced parentheses, next-greater-element, circular queue, basic simulation problems
-  - *Practice Prompt*: Given a string of parentheses `()[]{}` check if the input string is valid.
-  - *Practice Prompt*: Implement a Min-Stack that supports `getMin()` in $O(1)$ time.
-  - *Evaluator Cue*: Ensure stack underflow/overflow handling; avoid $O(N^2)$ brute-force lookup for Next Greater Element.
-- [ ] **Hash Maps & Sets** — frequency counting, two-sum style lookups, intersection/union of arrays
-  - *Practice Prompt*: Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
-  - *Practice Prompt*: Count the frequency of each element and return elements appearing more than $\lfloor N/3 \rfloor$ times.
-  - *Evaluator Cue*: Leverage $O(1)$ average lookup time; handle duplicate key collisions properly.
-- [ ] **Linked Lists** — reversal, cycle detection (Floyd's Tortoise and Hare), merging two sorted lists, basic insert/delete
-  - *Practice Prompt*: Reverse a singly linked list iteratively and recursively.
-  - *Practice Prompt*: Detect if a linked list has a cycle and find the node where the cycle begins.
-  - *Evaluator Cue*: Watch out for `NullPointerException` / segmentation faults when accessing `node.next.next`.
-- [ ] **Heaps & Priority Queue Basics** — k-th largest element, min-heap insertion/extraction
-  - *Practice Prompt*: Find the $K$-th largest element in an unsorted array using a Min-Heap of size $K$.
-  - *Evaluator Cue*: Ensure $O(N \log K)$ runtime complexity rather than full sorting $O(N \log N)$.
+## Non-Negotiable Prerequisites
 
-## Medium (Q2-tier)
+Master these primitives before attempting Medium/Hard problems — they appear repeatedly across the 20 solved problems:
 
-Focus: choosing the optimal technique, avoiding brute force, reducing time complexity from $O(N^2)$ to $O(N \log N)$ or $O(N)$.
+| Primitive | Why it matters | Quick reference |
+|---|---|---|
+| **XOR properties** | `a ^ a = 0`, `a ^ 0 = a`, XOR is commutative/associative | Problems 12, 17, 18 |
+| **MSB (Most Significant Bit)** | `msb(x) = x.bit_length() - 1` in Python; `__lg(x)` in C++ | Problems 17, 18 |
+| **Euler's Totient φ(N)** | Count integers in $[1, N]$ coprime to $N$; use $O(\sqrt{N})$ factorization | Problem 19 |
+| **Inversion counting** | Count swaps to sort = number of inversions; $O(N \log N)$ via merge sort or BIT | Problem 4 |
+| **Patience Sorting / LIS in $O(N \log N)$** | `bisect_left` on `tails` array; not $O(N^2)$ DP | Problems 13, 18 |
+| **Harmonic divisor loops** | Sum over all $d \leq N$ of $\lfloor N/d \rfloor$ = $O(N \log N)$ — do not use nested loops | Problem 14 |
 
-- [ ] **Greedy Algorithms** — interval scheduling, activity selection, coin-change (greedy variant), minimum-swaps-style problems
-  - *Practice Prompt*: Given $N$ activities with start and finish times, select the maximum number of activities that can be performed by a single person.
-  - *Practice Prompt*: Given an array of $0$s and $1$s, find the minimum number of adjacent swaps required to group all $1$s together.
-  - *Evaluator Cue*: Prove greedy choice property; sort intervals by end time rather than start time.
-- [ ] **Advanced Sliding Window & Two Pointers** — variable-length sliding window, 3-Sum / 4-Sum
-  - *Practice Prompt*: Find the length of the longest substring without repeating characters.
-  - *Practice Prompt*: Find all unique triplets in an array that sum to zero.
-  - *Evaluator Cue*: Handle shrinking window condition cleanly without infinite loop.
-- [ ] **Monotonic Stack & Queue** — daily temperatures, sliding window maximum, largest rectangle in histogram
-  - *Practice Prompt*: For each day, find how many days you would have to wait until a warmer temperature.
-  - *Evaluator Cue*: Maintain monotonic ordering ($O(N)$ total push/pop operations).
-- [ ] **Recursion & Backtracking** — subset generation, permutations, N-Queens, Sudoku solver, combination sum with constraints
-  - *Practice Prompt*: Generate all unique combinations of numbers that sum up to a target value where elements can be reused.
-  - *Practice Prompt*: Solve N-Queens problem and return total count of distinct valid board configurations.
-  - *Evaluator Cue*: Prune invalid recursive branches early to prevent TLE (Time Limit Exceeded).
-- [ ] **Trees & Binary Search Trees (BST)** — tree traversals (in/pre/post-order), BFS level-order, height/diameter, Lowest Common Ancestor (LCA)
-  - *Practice Prompt*: Calculate the diameter of a binary tree (longest path between any two nodes).
-  - *Practice Prompt*: Find the Lowest Common Ancestor (LCA) of two given nodes in a Binary Tree.
-  - *Evaluator Cue*: Handle unbalanced / skewed trees ($O(H)$ space for recursion stack).
-- [ ] **Optimization & Greedy/DP Hybrid** — minimize/maximize operations framing (recurring Infosys phrasing)
-  - *Practice Prompt*: Minimum operations to reduce a number to 1 using allowed operations (subtract 1, divide by 2, divide by 3).
-  - *Evaluator Cue*: Identify whether greedy choice works or if subproblem overlap requires memoization.
+---
 
-## Hard (Q3-tier)
+## Easy Tier (Q1 — 20 Marks)
 
-Focus: recognizing subproblem overlap, complex state space representation, graph modeling, and advanced algorithmic patterns under time pressure.
+Focus: correctness, edge-case safety, $O(N)$ or $O(N \log N)$ time.
 
-- [ ] **Dynamic Programming (1D & 2D)** — climbing stairs, house robber, 0/1 Knapsack, Unbounded Knapsack, Longest Common Subsequence (LCS), Longest Increasing Subsequence (LIS), Edit Distance, Grid Path Min Cost
-  - *Practice Prompt*: Given two strings `str1` and `str2`, return the minimum number of operations (insert, delete, replace) to convert `str1` to `str2`.
-  - *Practice Prompt*: Find the length of the longest subsequence in an array such that all elements of the subsequence are sorted in strictly increasing order.
-  - *Practice Prompt*: Find the maximum profit from selecting items with given weights and values subject to a total capacity $W$.
-  - *Evaluator Cue*: State definition $DP[i][j]$ must be precise; space-optimize from 2D $O(N \times M)$ to 1D $O(M)$ where possible.
-- [ ] **Graph Algorithms** — BFS/DFS traversal, connected components, cycle detection (directed/undirected), Shortest Path (Dijkstra, BFS on unweighted graph), Topological Sort (Kahn's algorithm)
-  - *Practice Prompt*: Find the shortest path from a source node to all other nodes in a weighted graph with non-negative edge weights (Dijkstra).
-  - *Practice Prompt*: Given $N$ courses and prerequisite pairs, determine if it is possible to finish all courses (Topological Sort / Cycle Detection).
-  - *Evaluator Cue*: Use adjacency lists over adjacency matrices for sparse graphs; maintain visited arrays/sets to prevent cycles.
-- [ ] **Disjoint Set Union (DSU / Union-Find)** — Kruskal's MST, connected components, redundant connection detection
-  - *Practice Prompt*: Given a graph that started as a tree with $N$ nodes and had one extra edge added, find the redundant edge that can be removed.
-  - *Evaluator Cue*: Implement path compression and union by rank/size ($O(\alpha(N))$ per operation).
-- [ ] **Bit Manipulation & Bitmasking** — XOR subset problems, counting set bits (Brian Kernighan's), DP with bitmasking
-  - *Practice Prompt*: Given an array where every element appears twice except for two elements that appear only once, find those two unique elements in $O(N)$ time and $O(1)$ space.
-  - *Practice Prompt*: Find the maximum XOR value of any two numbers in an array.
-  - *Evaluator Cue*: Beware of integer bit-width overflow (use 64-bit integer types `long long` / `long` when shifting $> 31$ bits).
-- [ ] **Number Theory Basics** — modular exponentiation, GCD/LCM (Euclidean Algorithm), Sieve of Eratosthenes, base conversion
-  - *Practice Prompt*: Compute $(A^B) \pmod C$ efficiently for large integers $A, B, C$.
-  - *Practice Prompt*: Convert an integer into its representation in an arbitrary base $K$ ($2 \le K \le 36$).
-  - *Evaluator Cue*: Handle negative numbers and modular subtraction safely: `(a % m + m) % m`.
-- [ ] **Advanced Data Structures (SP-Tier)** — Trie (Prefix Tree), Segment Tree / Fenwick Tree (Binary Indexed Tree)
-  - *Practice Prompt*: Implement a Trie with `insert`, `search`, and `startsWith` methods.
-  - *Practice Prompt*: Range Sum Query with point updates using a Segment Tree or Fenwick Tree.
-  - *Evaluator Cue*: Memory cleanup in Trie nodes; 1-based indexing clarity in Fenwick trees.
+- [ ] **Arrays** — traversal, in-place rotation, prefix sums, two-pointer basics, sliding window basics
+  - *Practice*: Max sum subarray of size $K$ (Sliding Window)
+  - *Practice*: Rotate array of $N$ elements right by $K$ steps in $O(1)$ space
+  - *Evaluator check*: $O(N)$ time, $O(1)$ auxiliary space; handle $K > N$
 
-## Cross-cutting skills (test throughout, not a separate section)
+- [ ] **Strings** — palindrome, anagram, string reversal, pattern matching basics
+  - *Practice*: First non-repeating character in a string (single pass)
+  - *Practice*: Determine if two strings are anagrams
 
-- [ ] Time and space complexity analysis — be ready to state Big-O for every solution you write, unprompted
-- [ ] Writing edge-case-safe code (empty input, single element, all-same-elements, overflow-prone inputs)
-- [ ] Clean variable naming and function decomposition — interviewers do look at code quality, not just test-case pass rate
+- [ ] **Stacks & Queues** — balanced parentheses, next-greater-element, basic simulation
+  - *Practice*: Valid parentheses check `()[]{}`, Min-Stack with $O(1)$ `getMin()`
+  - *Evaluator check*: Avoid $O(N^2)$ brute-force for next-greater; use monotonic stack
 
-## DSE-specific additions
+- [ ] **Hash Maps & Sets** — frequency counting, two-sum lookups, intersection/union
+  - *Practice*: Two-sum (target index lookup), majority element $> N/3$
 
-If you're targeting DSE specifically, layer these on top of the DSA checklist above:
+- [ ] **Linked Lists** — reversal, cycle detection (Floyd's), merging sorted lists
+  - *Practice*: Reverse singly linked list; detect cycle start node
 
-- [ ] REST API basics — writing a GET/POST endpoint in your primary framework (a real recent DSE interview question involved writing basic FastAPI/Express endpoints)
-- [ ] SQL — joins, aggregations, subqueries, window functions (cross-reference with Section 05 interview bank)
-- [ ] OOP fundamentals — the four pillars, applied to a real design question, not just definitions
-- [ ] Git workflow — be ready to describe your actual workflow (branching, merging, resolving conflicts), not just name the commands
-- [ ] System Architecture Awareness — client-server communication, JSON payload design, stateless vs. stateful authentication (JWT basics), database choice tradeoffs (SQL vs. NoSQL)
+- [ ] **Heaps / Priority Queue basics** — K-th largest, min-heap insertion/extraction
+  - *Practice*: K-th largest in unsorted array using Min-Heap of size $K$ — $O(N \log K)$
+
+---
+
+## Medium Tier (Q2 — 30 Marks)
+
+Focus: choosing the right technique, reducing from $O(N^2)$ to $O(N \log N)$ or $O(N)$.
+
+- [ ] **Greedy Algorithms** — interval scheduling, minimum-swaps, exchange argument proofs
+  - *Practice*: Activity selection (max non-overlapping); min adjacent swaps to group all 1s together
+  - *Evaluator check*: Prove greedy choice property; sort by end time, not start time
+
+- [ ] **Advanced Sliding Window & Two Pointers** — variable-length window, 3-Sum
+  - *Practice*: Longest substring without repeating characters; all unique triplets summing to zero
+  - *Evaluator check*: Handle window-shrink condition cleanly to avoid infinite loops
+
+- [ ] **Monotonic Stack & Queue** — daily temperatures, sliding window maximum
+  - *Practice*: Days until warmer temperature; largest rectangle in histogram
+
+- [ ] **Recursion & Backtracking** — subset generation, permutations, combination sum
+  - *Practice*: All combinations summing to target (elements reusable); N-Queens count
+  - *Evaluator check*: Prune invalid branches early — no brute exponential recursion without pruning
+
+- [ ] **Trees & BST** — BFS level-order, diameter, LCA
+  - *Practice*: Diameter of binary tree; Lowest Common Ancestor (LCA)
+  - *Evaluator check*: Handle skewed trees ($O(H)$ recursion stack space)
+
+- [ ] **Greedy / DP Hybrid** — minimize/maximize operations (common Infosys phrasing)
+  - *Practice*: Minimum operations to reduce number to 1 (subtract 1, divide by 2, divide by 3)
+
+---
+
+## Hard Tier (Q3 — 50 Marks)
+
+Focus: recognizing subproblem overlap, DP state design, graph modeling, advanced patterns under time pressure.
+
+- [ ] **Dynamic Programming (1D & 2D)** — Knapsack, LCS, LIS, Edit Distance, Grid Path Min Cost
+  - *Practice*: Edit distance (insert/delete/replace); max profit with weight constraint; min cost grid path
+  - *Evaluator check*: State definition must be precise; space-optimize $O(N \times M)$ to $O(M)$ where possible
+
+- [ ] **Graph Algorithms** — BFS/DFS, Dijkstra, Topological Sort, Cycle Detection
+  - *Practice*: Shortest path (Dijkstra); course scheduling validity (Topological Sort + cycle detection)
+  - *Evaluator check*: Use adjacency lists for sparse graphs; maintain visited set
+
+- [ ] **DSU (Disjoint Set Union / Union-Find)** — connected components, Kruskal's MST
+  - *Practice*: Redundant connection in undirected graph
+  - *Evaluator check*: Path compression + union by rank = $O(\alpha(N))$ per op
+
+- [ ] **Bit Manipulation & Bitmask DP** — XOR subsets, counting set bits, bitmask state DP
+  - *Practice*: Max XOR of two numbers in array; find two unique elements in array where all others appear twice
+  - *Evaluator check*: Use `long long` / `long` when shifting > 31 bits
+
+- [ ] **Number Theory** — modular exponentiation, GCD/LCM, Sieve, base conversion, Euler's totient
+  - *Practice*: Compute $A^B \bmod C$ in $O(\log B)$; base-$K$ representation of $N$
+  - *Evaluator check*: Safe modular subtraction: `(a % m + m) % m`
+
+- [ ] **Advanced Data Structures (SP-tier)** — Trie, Segment Tree / Fenwick Tree
+  - *Practice*: Implement Trie with `insert`, `search`, `startsWith`; range sum query with point updates
+
+---
+
+## Cross-Cutting Skills
+
+Apply these throughout — not a separate section to study at the end:
+
+- [ ] State Big-O time and space for every solution, unprompted
+- [ ] Write edge-case-safe code: empty input, $N=1$, all-same elements, overflow-prone inputs
+- [ ] Clean variable names and function decomposition — interviewers read code quality, not just pass rates
+
+---
+
+## DSE-Specific Additions
+
+Layer these on top of the DSA checklist if targeting DSE specifically:
+
+- [ ] **REST API basics** — write a GET/POST endpoint in your primary framework (FastAPI, Express, Spring Boot)
+- [ ] **SQL** — joins, aggregations, subqueries, window functions → cross-reference with `05-interview-prep`
+- [ ] **OOP fundamentals** — four pillars applied to a real design question, not just definitions
+- [ ] **Git workflow** — describe your actual branch/merge/conflict-resolution workflow
+- [ ] **System architecture** — client-server communication, JWT basics, SQL vs. NoSQL tradeoffs
+
+---
+
+## Last 48 Hours Strategy
+
+| Priority | Action |
+|---|---|
+| 🔴 Critical | Re-solve Problems 4, 15, 18, 19 — these have widely-circulated wrong online solutions |
+| 🟠 High | Run through all 5 high-cost mistakes in `02-syllabus-and-pattern` and verify you have fixes memorized |
+| 🟡 Medium | Review your own weak topics from the checklist above |
+| 🟢 Low | Skim `05-interview-prep` OOP and SQL sections; review your own project for resume Q&A |
+| ⚪ Skip | Don't start new topics you've never touched in the last 48 hours |
