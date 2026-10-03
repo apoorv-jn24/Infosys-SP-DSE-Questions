@@ -97,11 +97,15 @@ int main() {
                 queue<pair<int,int>> q;
                 q.push({i, j}); g[i][j] = '0';
                 while (!q.empty()) {
-                    auto [r, c] = q.front(); q.pop();
-                    for (auto [dr, dc] : vector<pair<int,int>>{{-1,0},{1,0},{0,-1},{0,1}}) {
-                        int nr = r+dr, nc = c+dc;
-                        if (nr>=0 && nr<n && nc>=0 && nc<m && g[nr][nc]=='1') {
-                            g[nr][nc] = '0'; q.push({nr, nc});
+                    pair<int,int> cur = q.front(); q.pop();
+                    int r = cur.first, c = cur.second;
+                    int dr[] = {-1, 1, 0, 0};
+                    int dc[] = {0, 0, -1, 1};
+                    for (int d = 0; d < 4; d++) {
+                        int nr = r + dr[d], nc = c + dc[d];
+                        if (nr >= 0 && nr < n && nc >= 0 && nc < m && g[nr][nc] == '1') {
+                            g[nr][nc] = '0';
+                            q.push({nr, nc});
                         }
                     }
                 }

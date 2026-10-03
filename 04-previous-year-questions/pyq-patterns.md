@@ -13,45 +13,61 @@
 | 2 | [02-next-greater-element.md](02-next-greater-element.md) | Easy | Stack | Monotonic Stack | — |
 | 3 | [03-rotate-array-by-k.md](03-rotate-array-by-k.md) | Easy | Arrays | Reversal Algorithm | — |
 | 4 | [04-summer-array-min-swaps.md](04-summer-array-min-swaps.md) | Easy | Greedy | Inversion Count — **NOT bubble sort** | ⚠️ Yes |
-| 5 | [05-min-base-identical-digits.md](05-min-base-identical-digits.md) | Easy | Number Theory | Base Conversion Search | — |
+| 5 | [05-min-base-identical-digits.md](05-min-base-identical-digits.md) | Easy | Number Theory | Base Search + 2-Digit Divisor Scan | ⚠️ Yes |
 | 6 | [06-monster-quest.md](06-monster-quest.md) | Medium | Greedy | Sort + Exchange Argument | — |
 | 7 | [07-andys-vacation.md](07-andys-vacation.md) | Medium | Greedy | Streak Counting | — |
-| 8 | [08-min-ugliness-binary-string.md](08-min-ugliness-binary-string.md) | Medium | Greedy | Sliding Window / Prefix Count | — |
+| 8 | [08-min-ugliness-binary-string.md](08-min-ugliness-binary-string.md) | Medium | Greedy | Regret Heap on Non-adjacent Runs | ⚠️ Yes |
 | 9 | [09-trapping-rain-water.md](09-trapping-rain-water.md) | Medium | Two Pointers | Prefix-Max / Two Pointers | — |
 | 10 | [10-number-of-islands.md](10-number-of-islands.md) | Medium | Graphs | BFS / DFS on Grid | — |
 | 11 | [11-coin-change.md](11-coin-change.md) | Medium | DP | Unbounded Knapsack DP | — |
-| 12 | [12-max-xor-sum-in-range.md](12-max-xor-sum-in-range.md) | Medium | Bit Manipulation | XOR prefix + Greedy | — |
+| 12 | [12-max-xor-sum-in-range.md](12-max-xor-sum-in-range.md) | Medium | Bit Manipulation | Linear XOR Basis + Gauss-Jordan RREF | ⚠️ Yes |
 | 13 | [13-longest-common-subsequence.md](13-longest-common-subsequence.md) | Hard | DP | 2D DP (LCS) | — |
-| 14 | [14-counting-divisible-arrays.md](14-counting-divisible-arrays.md) | Hard | Number Theory | Harmonic divisor loops | — |
-| 15 | [15-packing-gifts-into-k-boxes.md](15-packing-gifts-into-k-boxes.md) | Hard | Greedy | Optimal partitioning — **answer is 5, not 4** | ⚠️ Yes |
+| 14 | [14-counting-divisible-arrays.md](14-counting-divisible-arrays.md) | Hard | Number Theory | CRT + Polynomial Exponentiation | ⚠️ Yes |
+| 15 | [15-packing-gifts-into-k-boxes.md](15-packing-gifts-into-k-boxes.md) | Hard | Greedy | Binary Search on Answer ($O(N \log \Sigma)$) | ⚠️ Yes |
 | 16 | [16-longest-increasing-path-matrix.md](16-longest-increasing-path-matrix.md) | Hard | DFS + Memo | Topological DFS on Grid | — |
 | 17 | [17-max-xor-half-sized-subset.md](17-max-xor-half-sized-subset.md) | Hard | Bit Manipulation | Gaussian Elimination over GF(2) | — |
 | 18 | [18-longest-bitwise-compatible-lis.md](18-longest-bitwise-compatible-lis.md) | Hard | Bit Manip + LIS | **MSB-index LIS** — not plain value LIS | ⚠️ Yes |
-| 19 | [19-largest-set-product-1-mod-n.md](19-largest-set-product-1-mod-n.md) | Hard | Number Theory | **Euler's Totient φ(N)** — not `(N-1)!` | ⚠️ Yes |
-| 20 | [20-balls-and-buckets-probability.md](20-balls-and-buckets-probability.md) | Hard | Probability | Combinatorics / Expected Value | — |
+| 19 | [19-largest-set-product-1-mod-n.md](19-largest-set-product-1-mod-n.md) | Hard | Number Theory | **Euler's Totient + Primitive Root Parity** | ⚠️ Yes |
+| 20 | [20-balls-and-buckets-probability.md](20-balls-and-buckets-probability.md) | Hard | Probability | Combinatorics / Convolution DP | — |
 
 ---
 
 ## Documented Online Errors & Corrections
 
 > [!CAUTION]
-> These 4 problems have **incorrect solutions** widely circulated online. Using the wrong approach will fail hidden test cases.
+> The following problems have **incorrect or incomplete solutions** widely circulated online. Using naive approaches will fail hidden test cases.
 
 ### Problem 4 — Summer Array: Min Swaps
 - **Wrong online answer**: Simulates actual bubble sort swaps — $O(N^2)$. Times out for $N = 10^5$.
 - **Correct approach**: Count inversions using Merge Sort or a Fenwick Tree in $O(N \log N)$. Number of adjacent swaps = number of inversions.
 
+### Problem 5 — Minimum Base with Identical Digits
+- **Wrong online answer**: Scans bases up to $\sqrt{N}$ and falls back to $N-1$, missing two-digit representations `"dd"` where $N = d(b+1)$ for $d > 1$.
+- **Correct approach**: Scan divisors $d \leq \sqrt{N}$ where $d < N/d - 1$ to find the smallest valid base $b = N/d - 1$.
+
+### Problem 8 — Minimum Ugliness of Binary String
+- **Wrong online answer**: Applies a contiguous sliding window flip of length $K$, failing when arbitrary flips across the string are permitted.
+- **Correct approach**: Compress string into runs and use regret-greedy optimization with a priority queue to select non-adjacent interior runs to flip.
+
+### Problem 12 — Maximum XOR-Sum in Range [0, K]
+- **Wrong online answer**: Uses upper-triangular XOR basis without clearing higher bits, causing lower-bit changes to exceed $K$.
+- **Correct approach**: Convert basis to Reduced Row Echelon Form (RREF) via Gauss-Jordan elimination before greedy query.
+
+### Problem 14 — Counting Divisible Arrays
+- **Wrong online answer**: Uses prime inclusion-exclusion assuming prime multiplicity 1, failing when $N$ contains non-square-free prime powers (e.g. $N=4$).
+- **Correct approach**: Factorize $N$ and compute generating function powers $(P(x)^K \bmod x^a)$ modulo each prime power via the Chinese Remainder Theorem.
+
 ### Problem 15 — Packing Gifts into K Boxes
-- **Wrong online answer**: Claims maximum boxes = 4 for the sample input.
-- **Correct answer**: Maximum = **5** (verified by brute-force enumeration). Online solutions use a flawed greedy that misses valid partitions.
+- **Wrong online answer**: Sorts weights descending and uses greedy bin-packing, violating contiguous subarray order.
+- **Correct approach**: Preserve given element sequence and binary search on capacity ($O(N \log(\sum w))$).
 
 ### Problem 18 — Longest Bitwise-Compatible LIS
 - **Wrong online answer**: Runs standard LIS on raw values, ignoring the bitwise compatibility condition entirely.
 - **Correct approach**: Decode "bitwise compatibility" as *strictly increasing MSB indices*. The LIS must be built on MSB positions, not raw values. Use $O(N \log N)$ patience sorting on MSB indices.
 
 ### Problem 19 — Largest Set with Product 1 mod N
-- **Wrong online answer**: Computes $(N-1)!$ as the answer, which overflows 32-bit integers for $N \geq 13$ and is also mathematically incorrect.
-- **Correct approach**: The answer is **Euler's Totient $\varphi(N)$** — the count of integers in $[1, N]$ coprime to $N$. Compute in $O(\sqrt{N})$ using prime factorization.
+- **Wrong online answer**: Computes $(N-1)!$ (overflowing 32-bit int) or assumes $\varphi(N)$ unconditionally.
+- **Correct approach**: By Gauss's generalization of Wilson's theorem, the product of all coprime integers is $\equiv -1 \pmod N$ whenever $N$ has a primitive root ($N \in \{2, 4, p^k, 2p^k\}$). For such $N > 2$, drop element $N-1 \equiv -1$ to get size $\varphi(N) - 1$.
 
 ---
 

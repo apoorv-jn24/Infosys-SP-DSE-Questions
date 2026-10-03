@@ -15,9 +15,9 @@ monsters = [3, 6, 2, 8, 1]
 ```
 **Sample Output**:
 ```
-3
+4
 ```
-**Explanation**: Hero 5 beats monster 3; hero 3 beats monster 2; hero 7 beats monster 6 → 3 defeats.
+**Explanation**: Sorted heroes `[1, 2, 3, 5, 7]` and monsters `[1, 2, 3, 6, 8]`: Hero 1 beats monster 1; hero 2 beats monster 2; hero 3 beats monster 3; hero 7 beats monster 6 → 4 defeats.
 
 **Constraints**: $1 \leq N, M \leq 10^5$, $1 \leq a_i, h_j \leq 10^9$.
 

@@ -17,9 +17,10 @@ arr = [1, 3, 5, 2, 8, 4, 16]
 ```
 **Sample Output**:
 ```
-4
+5
 ```
-**Explanation**: MSBs: 1→0, 3→1, 5→2, 2→1, 8→3, 4→2, 16→4. Longest strictly increasing MSB sequence: 0→1→2→3 (e.g., 1→3→5→8), length = 4.
+**Explanation**: MSBs: $1 \rightarrow 0, 3 \rightarrow 1, 5 \rightarrow 2, 2 \rightarrow 1, 8 \rightarrow 3, 4 \rightarrow 2, 16 \rightarrow 4$.
+The longest strictly increasing MSB sequence is $0 \rightarrow 1 \rightarrow 2 \rightarrow 3 \rightarrow 4$ (corresponding to elements `1 → 3 → 5 → 8 → 16`), with length = 5.
 
 **Constraints**: $1 \leq N \leq 10^5$, $1 \leq arr[i] \leq 10^9$.
 

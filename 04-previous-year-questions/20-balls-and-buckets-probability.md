@@ -1,46 +1,61 @@
 # Problem 20 — Balls and Buckets: Colour Probability
 
-**Tier**: Hard (Q3) | **Marks**: 50 | **Topic**: Probability / Combinatorics
+**Tier**: Hard (Q3) | **Marks**: 50 | **Topic**: Probability / Dynamic Programming (Poisson-Binomial Distribution)
 
 ---
 
 ## Problem
 
-You have $B$ buckets. Each bucket $i$ contains $r_i$ red balls and $g_i$ green balls. You randomly draw **one ball from each bucket** (uniformly at random). Find the **probability** that the total number of red balls drawn is **exactly $K$**.
+You have $B$ buckets. Each bucket $i$ contains $r_i$ red balls and $g_i$ green balls. You randomly draw **one ball from each bucket** (uniformly at random). Find the **probability** that the total number of red balls drawn across all buckets is **exactly $K$**.
 
-Output the answer as a fraction in lowest terms (or as a floating-point value to 6 decimal places, per problem statement).
+Output the answer as a floating-point value rounded to 6 decimal places.
 
 **Sample Input**:
 ```
-buckets = [(2, 3), (1, 4), (3, 2)]   # (red, green) per bucket
-K = 2
+3 2
+2 3
+1 4
+3 2
 ```
 **Sample Output**:
 ```
-0.342857
+0.296000
 ```
+**Explanation**:
+For each bucket:
+- Bucket 1: $P(R_1) = 2/(2+3) = 2/5 = 0.4$, $P(G_1) = 3/5 = 0.6$
+- Bucket 2: $P(R_2) = 1/(1+4) = 1/5 = 0.2$, $P(G_2) = 4/5 = 0.8$
+- Bucket 3: $P(R_3) = 3/(3+2) = 3/5 = 0.6$, $P(G_3) = 2/5 = 0.4$
 
-**Constraints**: $1 \leq B \leq 20$, $1 \leq r_i + g_i \leq 100$, $0 \leq K \leq B$.
+To draw exactly 2 red balls, we can draw:
+1. Red from 1 & 2, Green from 3: $0.4 \times 0.2 \times 0.4 = 0.032$
+2. Red from 1 & 3, Green from 2: $0.4 \times 0.8 \times 0.6 = 0.192$
+3. Red from 2 & 3, Green from 1: $0.6 \times 0.2 \times 0.6 = 0.072$
+
+Total probability $= 0.032 + 0.192 + 0.072 = 0.296000$.
+
+**Constraints**: $1 \leq B \leq 100$, $1 \leq r_i + g_i \leq 100$, $0 \leq K \leq B$.
 
 ---
 
 ## Key Insight
 
-> **DP over buckets and count of red balls drawn**. `dp[j]` = probability of drawing exactly $j$ red balls from the first $i$ buckets. For each bucket $i$, update DP by considering drawing red or green.
-
-This is equivalent to computing a convolution of Bernoulli random variables.
+> **Convolution DP**:
+> Let `dp[j]` be the probability of having drawn exactly $j$ red balls from the first $i$ buckets.
+> When processing bucket $i$ with $P(R) = p$:
+> $$\text{new\_dp}[j] = \text{dp}[j] \times (1 - p) + \text{dp}[j-1] \times p$$
+> This computes the convolution of $B$ independent Bernoulli random variables in $O(B^2)$ time.
 
 ---
 
 ## Approach
 
-1. `dp = [0.0] * (B+1)`, `dp[0] = 1.0`.
+1. Initialize `dp = [0.0] * (B + 1)`, `dp[0] = 1.0`.
 2. For each bucket $(r_i, g_i)$:
-   - `total = r_i + g_i`.
-   - `p_red = r_i / total`, `p_green = g_i / total`.
-   - Update DP right-to-left (new array to avoid in-place conflicts):
-     - `new_dp[j] = dp[j-1] * p_red + dp[j] * p_green`.
-3. Return `dp[K]`.
+   - $p = r_i / (r_i + g_i)$
+   - Update `dp` backwards from $B$ down to 0:
+     - `dp[j] = dp[j] * (1 - p) + (dp[j-1] * p if j > 0 else 0)`
+3. Return `dp[K]` formatted to 6 decimal places.
 
 **Complexity**: $O(B^2)$ time, $O(B)$ space.
 
@@ -56,24 +71,29 @@ def ball_probability(buckets, K):
 
     for r, g in buckets:
         total = r + g
-        p_red   = r / total
+        p_red = r / total
         p_green = g / total
         new_dp = [0.0] * (B + 1)
         for j in range(B + 1):
-            if dp[j] == 0: continue
-            # Draw green from this bucket
-            new_dp[j]   += dp[j] * p_green
-            # Draw red from this bucket
+            if dp[j] == 0:
+                continue
+            new_dp[j] += dp[j] * p_green
             if j + 1 <= B:
-                new_dp[j+1] += dp[j] * p_red
+                new_dp[j + 1] += dp[j] * p_red
         dp = new_dp
 
     return dp[K]
 
-B = int(input())
-buckets = [tuple(map(int, input().split())) for _ in range(B)]
-K = int(input())
-print(f"{ball_probability(buckets, K):.6f}")
+import sys
+lines = sys.stdin.read().split()
+if lines:
+    B, K = int(lines[0]), int(lines[1])
+    buckets = []
+    idx = 2
+    for _ in range(B):
+        buckets.append((int(lines[idx]), int(lines[idx + 1])))
+        idx += 2
+    print(f"{ball_probability(buckets, K):.6f}")
 ```
 
 ## C++ 17
@@ -83,25 +103,38 @@ print(f"{ball_probability(buckets, K):.6f}")
 using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false); cin.tie(NULL);
-    int B, K; cin >> B >> K;
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int B, K;
+    if (!(cin >> B >> K)) return 0;
+
     vector<pair<int,int>> buckets(B);
-    for (auto& [r,g] : buckets) cin >> r >> g;
+    for (int i = 0; i < B; i++) {
+        cin >> buckets[i].first >> buckets[i].second;
+    }
 
     vector<double> dp(B + 1, 0.0);
     dp[0] = 1.0;
 
-    for (auto [r, g] : buckets) {
+    for (int i = 0; i < B; i++) {
+        double r = buckets[i].first;
+        double g = buckets[i].second;
         double total = r + g;
-        double p_red = r / total, p_green = g / total;
+        double p_red = r / total;
+        double p_green = g / total;
+
         vector<double> ndp(B + 1, 0.0);
         for (int j = 0; j <= B; j++) {
-            if (dp[j] == 0) continue;
+            if (dp[j] == 0.0) continue;
             ndp[j] += dp[j] * p_green;
-            if (j + 1 <= B) ndp[j+1] += dp[j] * p_red;
+            if (j + 1 <= B) {
+                ndp[j + 1] += dp[j] * p_red;
+            }
         }
         dp = ndp;
     }
+
     cout << fixed << setprecision(6) << dp[K] << "\n";
     return 0;
 }
@@ -111,8 +144,8 @@ int main() {
 
 ## Edge Cases
 
-| Scenario | Output |
-|---|---|
-| K = 0 (draw only green) | Product of all $g_i / (r_i + g_i)$ |
-| K = B (draw all red) | Product of all $r_i / (r_i + g_i)$ |
-| Single bucket (1R, 1G), K=1 | `0.500000` |
+| Scenario | Input | Output | Reason |
+|---|---|---|---|
+| K = 0 | 2 buckets: (1, 1), (1, 1) | `0.250000` | Only green drawn: $(1/2) \times (1/2) = 0.25$ |
+| K = B | 2 buckets: (1, 1), (1, 1) | `0.250000` | Only red drawn: $(1/2) \times (1/2) = 0.25$ |
+| Single bucket | 1 bucket: (1, 1), K = 1 | `0.500000` | $1/2 = 0.5$ |

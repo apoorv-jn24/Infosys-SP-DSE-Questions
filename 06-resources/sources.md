@@ -6,10 +6,10 @@ This repo is self-contained, but the following resources were consulted during c
 
 ## Primary Guide
 
-**Infosys SP & DSE Coding Round — The Complete Pattern Guide** (included in this repo)
-- 20 previous-year and pattern-based problems fully solved with Python 3 & C++ 17.
-- Corrections to 4 widely-circulated wrong online solutions (Problems 4, 15, 18, 19).
-- File: [`Infosys_SP_DSE_Coding_Questions_Complete_Guide.pdf`](../Infosys_SP_DSE_Coding_Questions_Complete_Guide.pdf)
+**Infosys SP & DSE Coding Round — Complete Problem Catalog**
+- 20 previous-year and pattern-based problems fully solved with Python 3 & C++17.
+- Documented mathematical corrections to circulating online tutorial errors (Problems 4, 5, 8, 12, 14, 15, 18, 19).
+- Available natively in [`04-previous-year-questions/pyq-patterns.md`](../04-previous-year-questions/pyq-patterns.md).
 
 ---
 

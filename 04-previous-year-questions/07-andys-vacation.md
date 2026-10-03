@@ -14,9 +14,9 @@ schedule = "RWWRRRWRR"
 ```
 **Sample Output**:
 ```
-9
+10
 ```
-**Explanation**: Streaks of R: length 1 → 1 pt, length 3 → 6 pts, length 2 → 3 pts. Total = 10. *(Adjust to match your actual problem variant.)*
+**Explanation**: Streaks of R: length 1 → 1 pt ($1 \times 2 / 2$), length 3 → 6 pts ($3 \times 4 / 2$), length 2 → 3 pts ($2 \times 3 / 2$). Total = $1 + 6 + 3 = 10$.
 
 **Constraints**: $1 \leq N \leq 10^5$, string contains only `'W'` and `'R'`.
 

@@ -1,26 +1,28 @@
 # Problem 15 — Packing Gifts into K Boxes
 
-**Tier**: Hard (Q3) | **Marks**: 50 | **Topic**: Greedy / Optimal Partitioning
-
-> [!CAUTION]
-> **Online Trap**: Most online solutions claim the answer for the sample case is **4**. The correct answer is **5**. The online greedy is flawed — it misses valid partitions. Verified by brute-force enumeration.
+**Tier**: Hard (Q3) | **Marks**: 50 | **Topic**: Binary Search on Answer / Contiguous Partitioning
 
 ---
 
 ## Problem
 
-Given $N$ gifts with weights $w_1, w_2, \ldots, w_N$ and $K$ boxes, distribute all gifts into exactly $K$ non-empty boxes (each gift goes into exactly one box). The **cost** of a box is the maximum weight among gifts inside it. Minimize the **maximum cost** across all boxes (i.e., minimize the maximum of all box maximums).
+You have $N$ gifts in a conveyor line with weights $w_1, w_2, \ldots, w_N$ arriving in order. You must distribute all gifts into **$K$ contiguous boxes** without reordering them. The **weight of a box** is the sum of weights of the gifts placed inside it. Find the assignment that **minimizes the maximum box weight**.
 
 **Sample Input**:
 ```
-weights = [3, 5, 8, 7, 4]
-K = 3
+5 3
+3 5 8 7 4
 ```
 **Sample Output**:
 ```
-8
+11
 ```
-*(The optimal partition assigns the heaviest gifts to separate boxes to minimize the max-cost box.)*
+**Explanation**:
+The optimal partition into 3 contiguous segments is:
+- Box 1: `[3, 5]` (sum = 8)
+- Box 2: `[8]` (sum = 8)
+- Box 3: `[7, 4]` (sum = 11)
+The maximum box weight is $\max(8, 8, 11) = 11$. Any other 3-partition has a box of weight $\geq 11$.
 
 **Constraints**: $1 \leq K \leq N \leq 10^5$, $1 \leq w_i \leq 10^9$.
 
@@ -28,41 +30,43 @@ K = 3
 
 ## Key Insight
 
-> **Binary search on the answer**. Binary search on the possible maximum box cost `mid`. For each `mid`, greedily check: can all gifts be packed into at most $K$ boxes such that no box has a gift heavier than `mid`? If `max(weights) > mid`, it's impossible (that gift can't fit in any box).
-
-The feasibility check: sort weights, and assign gifts greedily — whenever adding the next gift would exceed `mid`, open a new box.
+> **Monotonicity & Binary Search on the Answer**:
+> If a capacity $C$ can accommodate all gifts in $\leq K$ boxes, any capacity $C' > C$ can as well.
+> 1. Lower bound: $\text{lo} = \max(w_i)$ (every individual gift must fit into a box).
+> 2. Upper bound: $\text{hi} = \sum w_i$ (all gifts fit into 1 box).
+> 3. Feasibility check: Greedily pack gifts in the given sequence into the current box. As soon as adding the next gift exceeds capacity $C$, close the current box and start a new one. If total boxes $\leq K$, capacity $C$ is feasible.
 
 ---
 
 ## Approach
 
-1. Sort `weights` descending.
-2. Binary search `lo = max(weights)`, `hi = sum(weights)`.
-3. For each `mid`, feasibility:
-   - Assign gifts in sorted order; start new box whenever box total exceeds `mid`.
-   - Count boxes used. If boxes ≤ K, `mid` is feasible.
-4. Return the smallest feasible `mid`.
+1. `lo = max(weights)`, `hi = sum(weights)`.
+2. While `lo < hi`:
+   - `mid = (lo + hi) // 2`.
+   - If `can_pack(weights, K, mid)`: `hi = mid`.
+   - Else: `lo = mid + 1`.
+3. Return `lo`.
 
-**Complexity**: $O(N \log N + N \log(\text{sum}))$ time.
+**Complexity**: $O(N \log(\sum w))$ time, $O(1)$ auxiliary space.
 
 ---
 
 ## Python 3
 
 ```python
-def can_pack(weights, K, max_cost):
+def can_pack(weights, K, max_sum):
     boxes = 1
     current = 0
     for w in weights:
-        if w > max_cost:
-            return False  # no box can hold this gift
-        if current + w > max_cost:
-            boxes += 1; current = 0
+        if w > max_sum:
+            return False
+        if current + w > max_sum:
+            boxes += 1
+            current = 0
         current += w
     return boxes <= K
 
 def min_max_cost(weights, K):
-    weights.sort(reverse=True)
     lo, hi = max(weights), sum(weights)
     while lo < hi:
         mid = (lo + hi) // 2
@@ -72,9 +76,12 @@ def min_max_cost(weights, K):
             lo = mid + 1
     return lo
 
-weights = list(map(int, input().split()))
-K = int(input())
-print(min_max_cost(weights, K))
+import sys
+lines = sys.stdin.read().split()
+if lines:
+    n, K = int(lines[0]), int(lines[1])
+    weights = list(map(int, lines[2:2+n]))
+    print(min_max_cost(weights, K))
 ```
 
 ## C++ 17
@@ -82,31 +89,43 @@ print(min_max_cost(weights, K))
 ```cpp
 #include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
 
-bool can_pack(vector<int>& w, int K, long long lim) {
-    int boxes = 1; long long cur = 0;
-    for (int x : w) {
+bool can_pack(const vector<ll>& w, int K, ll lim) {
+    int boxes = 1; ll cur = 0;
+    for (ll x : w) {
         if (x > lim) return false;
-        if (cur + x > lim) { boxes++; cur = 0; }
+        if (cur + x > lim) {
+            boxes++;
+            cur = 0;
+        }
         cur += x;
     }
     return boxes <= K;
 }
 
 int main() {
-    ios::sync_with_stdio(false); cin.tie(NULL);
-    int n, K; cin >> n >> K;
-    vector<int> w(n);
-    for (int& x : w) cin >> x;
-    sort(w.rbegin(), w.rend());
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
 
-    long long lo = *max_element(w.begin(), w.end());
-    long long hi = accumulate(w.begin(), w.end(), 0LL);
+    int n, K;
+    if (!(cin >> n >> K)) return 0;
+
+    vector<ll> w(n);
+    for (ll& x : w) cin >> x;
+
+    ll lo = *max_element(w.begin(), w.end());
+    ll hi = accumulate(w.begin(), w.end(), 0LL);
+
     while (lo < hi) {
-        long long mid = (lo + hi) / 2;
-        if (can_pack(w, K, mid)) hi = mid;
-        else lo = mid + 1;
+        ll mid = lo + (hi - lo) / 2;
+        if (can_pack(w, K, mid)) {
+            hi = mid;
+        } else {
+            lo = mid + 1;
+        }
     }
+
     cout << lo << "\n";
     return 0;
 }
@@ -114,6 +133,10 @@ int main() {
 
 ---
 
-## Why the Online Answer of 4 is Wrong
+## Edge Cases
 
-For weights `[3, 5, 8, 7, 4]`, K=3: the online solution places gifts into buckets greedily by accumulated sum and stops too early, missing a valid arrangement. Full brute-force over all $K$-partitions confirms the correct optimal answer is **5**, not 4.
+| Scenario | Input | K | Output | Reason |
+|---|---|---|---|---|
+| Single box | `[3, 5, 8]` | 1 | `16` | Sum of all elements |
+| K equals N | `[3, 5, 8]` | 3 | `8` | Max element |
+| Identical weights | `[4, 4, 4, 4]` | 2 | `8` | Two boxes of 8 each |

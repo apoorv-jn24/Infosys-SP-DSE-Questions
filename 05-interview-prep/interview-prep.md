@@ -177,7 +177,7 @@ This document contains a comprehensive question bank and prep guide for the tech
 13. **What makes you a good team player?**
 14. **How do you handle feedback or criticism on your code during peer code reviews?**
 15. **If you have multiple competing deadlines, how do you prioritize tasks?**
-16. **What is your understanding of Infosys' core values (CFLOW - Customer First, Leadership by Example, Fairness, Integrity & Transparency, One Team, Trust)?**
+16. **What is your understanding of Infosys' core values (C-LIFE - Client Value, Leadership by Example, Integrity & Transparency, Fairness, Excellence)?**
 17. **Why should we hire you over other candidates?**
 18. **Tell me about an internship or project experience that didn't go as planned.**
 19. **What are your salary expectations or expectations from the SP/DSE training program?**

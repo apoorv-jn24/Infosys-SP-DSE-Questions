@@ -1,22 +1,23 @@
 # Problem 14 — Counting Divisible Arrays
 
-**Tier**: Hard (Q3) | **Marks**: 50 | **Topic**: Number Theory / Harmonic Loops
+**Tier**: Hard (Q3) | **Marks**: 50 | **Topic**: Number Theory / Chinese Remainder Theorem / Generating Functions
 
 ---
 
 ## Problem
 
-Given integers $N$ and $K$, count the number of arrays of length $K$ with elements in $[1, N]$ such that the **product of all elements is divisible by $N$**.
+Given integers $N$ and $K$, count the number of arrays of length $K$ with elements chosen from $[1, N]$ such that the **product of all elements is divisible by $N$**. Output the answer modulo $10^9 + 7$.
 
 **Sample Input**:
 ```
-N = 4, K = 2
+4 2
 ```
 **Sample Output**:
 ```
-7
+8
 ```
-**Explanation**: Pairs $(a,b)$ from $[1,4]^2$ where $a \times b \equiv 0 \pmod{4}$: $(1,4),(2,2),(2,4),(3,4),(4,1),(4,2),(4,3),(4,4)$ = 8... *(adjust for exact problem variant).*
+**Explanation**: All 8 valid pairs $(a, b) \in [1, 4]^2$ with $(a \cdot b) \bmod 4 = 0$ are:
+$(1,4), (2,2), (2,4), (3,4), (4,1), (4,2), (4,3), (4,4)$.
 
 **Constraints**: $1 \leq N \leq 10^6$, $1 \leq K \leq 10^5$.
 
@@ -24,61 +25,74 @@ N = 4, K = 2
 
 ## Key Insight
 
-> Use **inclusion-exclusion over divisors of $N$**. Count arrays where product is divisible by $N$ = Total arrays - Arrays where product is NOT divisible by $N$.
-
-For the harmonic approach: iterate over all divisors $d$ of $N$ using the fact that the sum $\sum_{d=1}^{N} \lfloor N/d \rfloor = O(N \log N)$.
-
-> [!WARNING]
-> **Never use nested loops** over all pairs of divisors. This leads to $O(N^2)$ which times out. Use the harmonic divisor sum pattern.
+> 1. Factorize $N = \prod_{i=1}^m p_i^{a_i}$ into distinct prime powers.
+> 2. By the Chinese Remainder Theorem (CRT), choosing an integer in $[1, N]$ uniformly at random is equivalent to choosing independent residues modulo each $p_i^{a_i}$. Therefore, the problem factors independently across each prime power $p^a$:
+>    $$\text{Answer} = \prod_{p^a \parallel N} \text{ValidCount}(p, a, K) \pmod{10^9 + 7}$$
+> 3. For a single prime power $p^a$, the product of elements is divisible by $p^a$ if and only if the sum of $p$-adic valuations satisfies $\sum_{j=1}^K v_p(arr[j]) \geq a$.
+> 4. In $[1, p^a]$, the number of residues with $v_p(x) = v$ (for $0 \leq v < a$) is:
+>    $$c[v] = p^{a - v} - p^{a - v - 1}$$
+> 5. The generating function for the sum of valuations is $P(x) = \sum_{v=0}^{a-1} c[v] x^v$. Computing $P(x)^K \bmod x^a$ via polynomial binary exponentiation gives the number of tuples whose valuation sum is $< a$ (the "bad" tuples).
+> 6. $\text{ValidCount}(p, a, K) = (p^a)^K - \sum_{v=0}^{a-1} [x^v](P(x)^K \bmod x^a)$.
 
 ---
 
-## Approach (Inclusion-Exclusion)
+## Approach
 
-1. Find all prime factors of $N$.
-2. Use inclusion-exclusion: count arrays where product is missing at least one prime factor of $N$.
-3. Total = $N^K$ - (excluded by inclusion-exclusion).
+1. Factorize $N$ into prime powers $p^a$.
+2. For each $p^a$:
+   - Build polynomial $c$ of degree $a$ where $c[v] = p^{a-v} - p^{a-v-1}$.
+   - Compute $res = c^K \bmod x^a$ using polynomial multiplication in $O(a^2 \log K)$.
+   - $\text{bad} = \sum_{v=0}^{a-1} res[v]$.
+   - $\text{valid} = ((p^a)^K - \text{bad}) \pmod{10^9 + 7}$.
+3. Multiply the valid counts across all prime factors modulo $10^9 + 7$.
 
-**Complexity**: $O(\sqrt{N} + 2^{\omega(N)} \cdot K)$ where $\omega(N)$ = number of distinct prime factors of $N$ (at most 7 for $N \leq 10^6$).
+**Complexity**: $O(\sqrt{N} + \omega(N) \cdot a^2 \log K)$ time where $a \leq 20$, $O(a)$ space.
 
 ---
 
 ## Python 3
 
 ```python
-def prime_factors(n):
-    factors = []
+MOD = 10**9 + 7
+
+def factorize(n):
+    factors = {}
     d = 2
     while d * d <= n:
-        if n % d == 0:
-            factors.append(d)
-            while n % d == 0: n //= d
+        while n % d == 0:
+            factors[d] = factors.get(d, 0) + 1
+            n //= d
         d += 1
-    if n > 1: factors.append(n)
+    if n > 1:
+        factors[n] = factors.get(n, 0) + 1
     return factors
 
+def poly_mul(A, B, deg):
+    C = [0] * deg
+    for i, a in enumerate(A):
+        if a:
+            for j in range(deg - i):
+                C[i + j] = (C[i + j] + a * B[j]) % MOD
+    return C
+
+def poly_pow(P, k, deg):
+    result = [1] + [0] * (deg - 1)
+    while k:
+        if k & 1:
+            result = poly_mul(result, P, deg)
+        P = poly_mul(P, P, deg)
+        k >>= 1
+    return result
+
 def count_divisible_arrays(N, K):
-    MOD = 10**9 + 7
-    primes = prime_factors(N)
-    total = pow(N, K, MOD)
-
-    # Inclusion-exclusion over subsets of prime factors
-    excluded = 0
-    p = len(primes)
-    for mask in range(1, 1 << p):
-        d = 1
-        bits = bin(mask).count('1')
-        for i in range(p):
-            if mask >> i & 1:
-                d *= primes[i]
-        # Arrays with all elements NOT divisible by any prime in this subset
-        count = pow(N // d, K, MOD)
-        if bits % 2 == 1:
-            excluded = (excluded + count) % MOD
-        else:
-            excluded = (excluded - count + MOD) % MOD
-
-    return (total - excluded + MOD) % MOD
+    ans = 1
+    for p, a in factorize(N).items():
+        # c[v] = residues mod p^a with p-adic valuation exactly v
+        c = [(pow(p, a - v, MOD) - pow(p, a - v - 1, MOD) + MOD) % MOD for v in range(a)]
+        bad = sum(poly_pow(c, K, a)) % MOD
+        total = pow(p, a * K, MOD)
+        ans = (ans * (total - bad + MOD)) % MOD
+    return ans
 
 N, K = map(int, input().split())
 print(count_divisible_arrays(N, K))
@@ -89,37 +103,79 @@ print(count_divisible_arrays(N, K))
 ```cpp
 #include <bits/stdc++.h>
 using namespace std;
-const int MOD = 1e9 + 7;
+typedef long long ll;
+const ll MOD = 1e9 + 7;
 
-long long power(long long base, long long exp, long long mod) {
-    long long result = 1; base %= mod;
-    while (exp > 0) {
-        if (exp & 1) result = result * base % mod;
-        base = base * base % mod; exp >>= 1;
+ll power(ll b, ll e) {
+    ll r = 1; b %= MOD;
+    while (e > 0) {
+        if (e & 1) r = (r * b) % MOD;
+        b = (b * b) % MOD;
+        e >>= 1;
     }
-    return result;
+    return r;
+}
+
+vector<ll> polyMul(const vector<ll>& A, const vector<ll>& B, int deg) {
+    vector<ll> C(deg, 0);
+    for (int i = 0; i < deg; i++) {
+        if (!A[i]) continue;
+        for (int j = 0; i + j < deg; j++) {
+            C[i + j] = (C[i + j] + A[i] * B[j]) % MOD;
+        }
+    }
+    return C;
 }
 
 int main() {
-    long long N, K; cin >> N >> K;
-    vector<long long> primes;
-    long long tmp = N;
-    for (long long d = 2; d*d <= tmp; d++) {
-        if (tmp % d == 0) { primes.push_back(d); while (tmp%d==0) tmp/=d; }
-    }
-    if (tmp > 1) primes.push_back(tmp);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
 
-    int p = primes.size();
-    long long total = power(N, K, MOD);
-    long long excluded = 0;
-    for (int mask = 1; mask < (1<<p); mask++) {
-        long long d = 1; int bits = __builtin_popcount(mask);
-        for (int i = 0; i < p; i++) if (mask>>i&1) d *= primes[i];
-        long long cnt = power(N/d, K, MOD);
-        if (bits % 2 == 1) excluded = (excluded + cnt) % MOD;
-        else excluded = (excluded - cnt + MOD) % MOD;
+    ll N, K;
+    if (!(cin >> N >> K)) return 0;
+
+    ll ans = 1, temp = N;
+    for (ll p = 2; p * p <= temp || temp > 1; p++) {
+        if (p * p > temp) p = temp;
+        if (temp % p != 0) continue;
+
+        int a = 0;
+        while (temp % p == 0) {
+            temp /= p;
+            a++;
+        }
+
+        vector<ll> pw(a + 1, 1);
+        for (int i = 1; i <= a; i++) pw[i] = pw[i - 1] * p;
+
+        vector<ll> c(a), res(a, 0);
+        res[0] = 1;
+        for (int v = 0; v < a; v++) {
+            c[v] = (pw[a - v] - pw[a - v - 1]) % MOD;
+        }
+
+        for (ll e = K; e > 0; e >>= 1) {
+            if (e & 1) res = polyMul(res, c, a);
+            c = polyMul(c, c, a);
+        }
+
+        ll bad = 0;
+        for (ll x : res) bad = (bad + x) % MOD;
+        ll total = power(p, (ll)a * K);
+        ans = (ans * ((total - bad + MOD) % MOD)) % MOD;
     }
-    cout << (total - excluded + MOD) % MOD << "\n";
+
+    cout << ans << "\n";
     return 0;
 }
 ```
+
+---
+
+## Edge Cases
+
+| N | K | Output | Explanation |
+|---|---|---|---|
+| 4 | 2 | 8 | Pairs from $[1, 4]$ divisible by 4 |
+| 1 | 5 | 1 | $1^5 = 1$, always divisible by 1 |
+| 7 | 3 | 127 | Prime $N=7$: $7^3 - 6^3 = 343 - 216 = 127$ |
